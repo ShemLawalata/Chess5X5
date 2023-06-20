@@ -11,6 +11,27 @@ using namespace std;
  * 
  * @return int 
  */
+static const int move_table_rook_bishop[8][7][2] = {
+  {{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}},
+  {{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}},
+  {{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}},
+  {{-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0}},
+  {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}},
+  {{1, -1}, {2, -2}, {3, -3}, {4, -4}, {5, -5}, {6, -6}, {7, -7}},
+  {{-1, 1}, {-2, 2}, {-3, 3}, {-4, 4}, {-5, 5}, {-6, 6}, {-7, 7}},
+  {{-1, -1}, {-2, -2}, {-3, -3}, {-4, -4}, {-5, -5}, {-6, -6}, {-7, -7}},
+};
+static const int move_table_knight[8][2] = {
+  {1, 2}, {1, -2},
+  {-1, 2}, {-1, -2},
+  {2, 1}, {2, -1},
+  {-2, 1}, {-2, -1},
+};
+static const int move_table_king[8][2] = {
+  {1, 0}, {0, 1}, {-1, 0}, {0, -1}, 
+  {1, 1}, {1, -1}, {-1, 1}, {-1, -1},
+};
+
 int State::evaluate(){
   // [TODO] design your own evaluation function
   int total = 0;
@@ -53,7 +74,7 @@ int State::evaluate(){
           }
           //- - - KEEP ___
 
-          
+
           //rook
           // if (i == 5 && j == 2)
           // {
@@ -66,7 +87,21 @@ int State::evaluate(){
           // }
 
           //Shield
-
+          // for(auto move: move_table_king){ //Continnue if ketemu ratu or sth di depan
+          //     int p[2] = {move[0] + i, move[1] + j};
+              
+          //     if(p[0]>=BOARD_H || p[0]<0 || p[1]>=BOARD_W || p[1]<0){
+          //         player_piece += 30;
+          //         continue;
+          //     } 
+          //     int now_piece = self_board[p[0]][p[1]];
+          //    // cout << now_piece << " iniloh\n";
+          //     //Not Covered and same axis with Queen, Bishop, and Rook, Knight?
+          //     if(now_piece)
+          //     {
+          //       player_piece+=30;
+          //     }
+          // }
         } 
         //Black
         else{
@@ -105,7 +140,21 @@ int State::evaluate(){
           // }
 
           //shield
-
+        //   for(auto move: move_table_king){ //Continnue if ketemu ratu or sth di depan
+        //       int p[2] = {move[0] + i, move[1] + j};
+              
+        //       if(p[0]>=BOARD_H || p[0]<0 || p[1]>=BOARD_W || p[1]<0){
+        //           player_piece += 30;
+        //           continue;
+        //       } 
+        //       int now_piece = self_board[p[0]][p[1]];
+        //      // cout << now_piece << " iniloh\n";
+        //       //Not Covered and same axis with Queen, Bishop, and Rook, Knight?
+        //       if(now_piece)
+        //       {
+        //         player_piece+=30;
+        //       }
+        //   }
         }
       }
       
@@ -117,7 +166,68 @@ int State::evaluate(){
     for(int i=0; i<BOARD_H; i+=1){
     for(int j=0; j<BOARD_W; j+=1){
       oppn_piece += array_value[(int)oppn_board[i][j]];
-      
+      //Kebalikan kalau player putih berarti mainkan yang hitam
+
+      // if (int eny_piece = oppn_board[i][j])
+      // {
+      //   //Lawan Black
+      //     if (this->player == 0)
+      //     {
+      //       if(i == 2 && j == 2){
+      //         if(eny_piece == 3) oppn_piece += 40;
+      //       //if(my_piece == )
+      //       else oppn_piece += 20;
+      //     }
+      //     if(i == 2 && j == 3){
+      //         if(eny_piece == 3) oppn_piece += 40;
+      //         else if(eny_piece == 4) oppn_piece += 30;
+      //         else oppn_piece += 20;
+      //       }
+      //     //Middle L
+      //     if(i == 2 && j == 1){
+      //       if(eny_piece == 3) oppn_piece += 40;
+      //       else if(eny_piece == 4) oppn_piece += 30;
+      //       else oppn_piece += 20;
+      //     }
+      //     //queen
+      //     if (i == 1 && j == 2)
+      //     {
+      //       if(eny_piece == 4) oppn_piece += 40;
+      //     }
+      //     }
+
+      //     //Lawan putih
+      //     if (this->player == 1)
+
+      //     {
+      //       //Middle
+      //     if(i == 3 && j == 2){
+      //       if(eny_piece == 3) oppn_piece += 40;
+      //       //else if(my_piece == 4) player_piece += 30;
+      //       else oppn_piece += 20;
+      //     }
+      //     //Middle R
+      //     if(i == 3 && j == 3){
+      //         if(eny_piece == 3) oppn_piece += 40;
+      //         else if(eny_piece == 4) oppn_piece += 30;
+      //         else oppn_piece += 20;
+      //       }
+      //     //Middle L
+      //     if(i == 3 && j == 1){
+      //       if(eny_piece == 3) oppn_piece += 40;
+      //       else if(eny_piece == 4) oppn_piece += 30;
+      //       else oppn_piece += 20;
+      //     }
+
+      //     //queen
+      //     if (i == 4 && j == 2)
+      //     {
+      //       if(eny_piece == 4) oppn_piece += 40;
+      //     }
+      //     }
+          
+          
+      // }
     }
   }
     total = player_piece - oppn_piece;
@@ -157,26 +267,6 @@ State* State::next_state(Move move){
 }
 
 
-static const int move_table_rook_bishop[8][7][2] = {
-  {{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}},
-  {{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}},
-  {{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}},
-  {{-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0}},
-  {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}},
-  {{1, -1}, {2, -2}, {3, -3}, {4, -4}, {5, -5}, {6, -6}, {7, -7}},
-  {{-1, 1}, {-2, 2}, {-3, 3}, {-4, 4}, {-5, 5}, {-6, 6}, {-7, 7}},
-  {{-1, -1}, {-2, -2}, {-3, -3}, {-4, -4}, {-5, -5}, {-6, -6}, {-7, -7}},
-};
-static const int move_table_knight[8][2] = {
-  {1, 2}, {1, -2},
-  {-1, 2}, {-1, -2},
-  {2, 1}, {2, -1},
-  {-2, 1}, {-2, -1},
-};
-static const int move_table_king[8][2] = {
-  {1, 0}, {0, 1}, {-1, 0}, {0, -1}, 
-  {1, 1}, {1, -1}, {-1, 1}, {-1, -1},
-};
 
 
 /**
