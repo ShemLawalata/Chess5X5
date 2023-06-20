@@ -22,18 +22,94 @@ int State::evaluate(){
     for(int j=0; j<BOARD_W; j+=1){
       player_piece += array_value[(int)self_board[i][j]];
       //oppn_piece += array_value[(int)oppn_board[i][j]];
-      if (this->player == 0)//white
+      if (int my_piece = self_board[i][j])//white
       {
-        /* code */
+        //White
+          if(this->player == 0)
+        {
+          //Middle
+          if(i == 3 && j == 2){
+            if(my_piece == 3) player_piece += 40;
+            //else if(my_piece == 4) player_piece += 30;
+            else player_piece += 20;
+          }
+          //Middle R
+          if(i == 3 && j == 3){
+              if(my_piece == 3) player_piece += 40;
+              else if(my_piece == 4) player_piece += 30;
+              else player_piece += 20;
+            }
+          //Middle L
+          if(i == 3 && j == 1){
+            if(my_piece == 3) player_piece += 40;
+            else if(my_piece == 4) player_piece += 30;
+            else player_piece += 20;
+          }
+
+          //queen
+          if (i == 4 && j == 2)
+          {
+            if(my_piece == 4) player_piece += 40;
+          }
+          //- - - KEEP ___
+
+          
+          //rook
+          // if (i == 5 && j == 2)
+          // {
+          //   if(my_piece == 2) player_piece+= 40;
+          // }
+          
+          //Knight
+          // if(i == 4 && j == 3){
+          //   if(my_piece == 2) player_piece += 30;//20
+          // }
+
+          //Shield
+
+        } 
+        //Black
+        else{
+          //middle
+          if(i == 2 && j == 2){
+              if(my_piece == 3) player_piece += 40;
+            //if(my_piece == )
+            else player_piece += 20;
+          }
+          if(i == 2 && j == 3){
+              if(my_piece == 3) player_piece += 40;
+              else if(my_piece == 4) player_piece += 30;
+              else player_piece += 20;
+            }
+          //Middle L
+          if(i == 2 && j == 1){
+            if(my_piece == 3) player_piece += 40;
+            else if(my_piece == 4) player_piece += 30;
+            else player_piece += 20;
+          }
+          //queen
+          if (i == 1 && j == 2)
+          {
+            if(my_piece == 4) player_piece += 40;
+          }
+          //- - - KEEP ___
+          //rook
+          // if (i == 0 && j == 2)
+          // {
+          //   if(my_piece == 2) player_piece += 40;
+          // }
+
+          //Knight
+          // if(i == 1 && j == 1){
+          //   if(my_piece == 2) player_piece += 30;//20
+          // }
+
+          //shield
+
+        }
       }
       
-      // if(int my_piece = self_board[i][j])
-      // {
-      //   if(i == 3 && j == 2){
-      //    if(my_piece == 3) player_piece += 40;
-      //    if(my_piece == )
-      //   }
-      // } 
+      
       //if(i == 3 && j == 1 && (int)self_board[i][j]) player_piece += 20;
      // if(i == 3 && j == 3 && (int)self_board[i][j]) player_piece += 20;
     }
