@@ -4,7 +4,7 @@
 
 #include "./state.hpp"
 #include "../config.hpp"
-
+using namespace std;
 
 /**
  * @brief evaluate the state
@@ -13,7 +13,40 @@
  */
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  return 0;
+  int total = 0;
+  auto self_board = this->board.board[this->player];
+  auto oppn_board = this->board.board[1 - this->player];
+  int player_piece = 0, oppn_piece = 0;
+  int array_value[7] = {0, 2, 4, 8, 16, 32, 64};//empty -> king
+  for(int i=0; i<BOARD_H; i+=1){
+    for(int j=0; j<BOARD_W; j+=1){
+      player_piece += array_value[(int)self_board[i][j]];
+      //oppn_piece += array_value[(int)oppn_board[i][j]];
+      if (this->player == 0)//white
+      {
+        /* code */
+      }
+      
+      // if(int my_piece = self_board[i][j])
+      // {
+      //   if(i == 3 && j == 2){
+      //    if(my_piece == 3) player_piece += 40;
+      //    if(my_piece == )
+      //   }
+      // } 
+      //if(i == 3 && j == 1 && (int)self_board[i][j]) player_piece += 20;
+     // if(i == 3 && j == 3 && (int)self_board[i][j]) player_piece += 20;
+    }
+  }
+    for(int i=0; i<BOARD_H; i+=1){
+    for(int j=0; j<BOARD_W; j+=1){
+      oppn_piece += array_value[(int)oppn_board[i][j]];
+      
+    }
+  }
+    total = player_piece - oppn_piece;
+ //if(total > 0) cout << total << endl;
+  return total;
 }
 
 
@@ -32,6 +65,7 @@ State* State::next_state(Move move){
   if(moved == 1 && (to.first==BOARD_H-1 || to.first==0)){
     moved = 5;
   }
+  //Ciak lawan
   if(next.board[1-this->player][to.first][to.second]){
     next.board[1-this->player][to.first][to.second] = 0;
   }
@@ -39,10 +73,10 @@ State* State::next_state(Move move){
   next.board[this->player][from.first][from.second] = 0;
   next.board[this->player][to.first][to.second] = moved;
   
-  State* next_state = new State(next, 1-this->player);
+  State* next_state = new State(next, 1-this->player);//ganti gantian board
   
   if(this->game_state != WIN)
-    next_state->get_legal_actions();
+    next_state->get_legal_actions(); //Expanding possible moves for next state
   return next_state;
 }
 
@@ -91,7 +125,7 @@ void State::get_legal_actions(){
           case 1: //pawn
             if(this->player && i<BOARD_H-1){
               //black
-              if(!oppn_board[i+1][j] && !self_board[i+1][j])
+              if(!oppn_board[i+1][j] && !self_board[i+1][j]) //Move forward by one
                 all_actions.push_back(Move(Point(i, j), Point(i+1, j)));
               if(j<BOARD_W-1 && (oppn_piece=oppn_board[i+1][j+1])>0){
                 all_actions.push_back(Move(Point(i, j), Point(i+1, j+1)));
@@ -186,12 +220,112 @@ void State::get_legal_actions(){
             break;
           
           case 6: //king
-            for(auto move: move_table_king){
+            for(auto move: move_table_king){ //Continnue if ketemu ratu or sth di depan
               int p[2] = {move[0] + i, move[1] + j};
               
               if(p[0]>=BOARD_H || p[0]<0 || p[1]>=BOARD_W || p[1]<0) continue;
               now_piece = self_board[p[0]][p[1]];
-              if(now_piece) continue;
+             // cout << now_piece << " iniloh\n";
+              //Not Covered and same axis with Queen, Bishop, and Rook, Knight?
+              if(now_piece) continue;//Covered
+              else
+              {
+                  //Check along the axis blocked or not if blocked continue 
+                  //else check clash with Q,B, R or K
+                  bool clash = false;
+                  if (move[0] == 1 && move[1] == 0) //bawah R&Q
+                  {
+                      for (int i = p[0]+1; i < BOARD_H; i++)
+                      {
+                         if(self_board[i][p[1]]) break; //castle == save
+                         if(oppn_board[i][p[1]] == 5 || oppn_board[i][p[1]] == 2){
+                            clash = true;
+                            break;
+                         }
+                      }
+                      
+                  }
+                  else if (move[0] == 0 && move[1] == 1)// kanan R&Q
+                  {
+                    for (int j = p[1]+1; j < BOARD_W; j++)
+                    {
+                      if(self_board[p[0]][j])break;
+                      if(oppn_board[p[0]][j] == 5 || oppn_board[p[0]][j] == 2){
+                        clash = true;
+                        break;
+                      }
+                    }
+                    
+                  }
+                  else if (move[0] == -1 && move[1] == 0)//atas R&Q
+                  {
+                    for (int i = p[0]-1; i >= 0; i--)
+                      {
+                         if(self_board[i][p[1]]) break; //castle == save
+                         if(oppn_board[i][p[1]] == 5 || oppn_board[i][p[1]] == 2){
+                            clash = true;
+                            break;
+                         }
+                      }
+                  }
+                  else if (move[0] == 0 && move[1] == -1)//kiri R&Q
+                  {
+                    for (int j = p[1]-1; j >= 0; j--)
+                    {
+                      if(self_board[p[0]][j])break;
+                      if(oppn_board[p[0]][j] == 5 || oppn_board[p[0]][j] == 2){
+                        clash = true;
+                        break;
+                      }
+                    }
+                  }
+                  else if (move[0] == 1 && move[1] == 1)//kanan bawah B&Q
+                  {
+                    for (int i = p[0]+1, j = p[1]+1; (i < BOARD_H && j < BOARD_W); i++, j++)
+                    {
+                      if(self_board[i][j])break;
+                      if(oppn_board[i][j] == 5 || oppn_board[i][j] == 4){
+                        clash = true;
+                        break;
+                      }
+                    }
+                    
+                  }
+                  else if (move[0] == 1 && move[1] == -1)//kiri bawah B&Q
+                  {
+                    for (int i = p[0]+1, j = p[1]-1; (i < BOARD_H && j >= 0); i++, j--)
+                    {
+                      if(self_board[i][j])break;
+                      if(oppn_board[i][j] == 5 || oppn_board[i][j] == 4){
+                        clash = true;
+                        break;
+                      }
+                    }
+                  }
+                  else if (move[0] == -1 && move[1] == 1)//atas kanan B&Q
+                  {
+                   for (int i = p[0]-1, j = p[1]+1; (i >= 0 && j < BOARD_W); i--, j++)
+                    {
+                      if(self_board[i][j])break;
+                      if(oppn_board[i][j] == 5 || oppn_board[i][j] == 4){
+                        clash = true;
+                        break;
+                      }
+                    }
+                  }
+                  else if (move[0] == -1 && move[1] == -1)//atas kiri B&Q
+                  {
+                   for (int i = p[0]-1, j = p[1]-1; (i >= 0 && j >= 0); i--, j--)
+                    {
+                      if(self_board[i][j])break;
+                      if(oppn_board[i][j] == 5 || oppn_board[i][j] == 4){
+                        clash = true;
+                        break;
+                      }
+                    }
+                  }
+                  if(clash)continue;
+              }
               
               all_actions.push_back(Move(Point(i, j), Point(p[0], p[1])));
               

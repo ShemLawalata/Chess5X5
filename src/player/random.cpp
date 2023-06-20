@@ -29,7 +29,7 @@ void read_board(std::ifstream& fin) {
     }
   }
   root = new State(board, player);
-  root->get_legal_actions();
+  root->get_legal_actions();//Each board or state expanded by many move "board"
 }
 
 
