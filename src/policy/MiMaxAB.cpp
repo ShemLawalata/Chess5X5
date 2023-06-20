@@ -7,7 +7,7 @@ using namespace std;
 int MiMaxAB::Alpha_Beta(State* state, int depth, int alpha, int beta, bool MaxiMe)
 {
     if(depth == 0) return state->evaluate();
-    if (state->game_state == WIN) return state->evaluate() + 400;
+    //if (state->game_state == WIN) return state->evaluate() + 400;
   
     else if(MaxiMe){
         int value = -2100000000;
